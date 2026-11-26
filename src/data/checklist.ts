@@ -4,7 +4,7 @@ export const firstDay = '2026-11-26';
 export const lastDay = '2027-01-07';
 export const groups = {
   ctdl: 'CTDLGT', xstk: 'XSTK', research: 'NCKH sinh viên',
-  methods: 'Phương pháp luận NCKH', python: 'Python ATTT', other: 'Môn khác',
+  python: 'Python ATTT', other: 'Môn khác',
 };
 export type Group = keyof typeof groups;
 export type Block = { output: string; minutes: string; weight: number; rest?: boolean };
@@ -102,17 +102,26 @@ export const fixed: [string, string, Group, string][] = [
   ['2026-12-23', '14:45–16:25', 'other', 'Thi Kỹ năng thuyết trình'],
   ['2026-12-25', '09:30–11:10', 'other', 'Thi Lập trình Web'],
   ['2026-12-31', '09:30–11:10', 'ctdl', 'Thi CTDLGT'],
-  ['2027-01-06', '07:30', 'methods', 'Đến ký tên môn Phương pháp luận NCKH'],
   ['2027-01-07', '07:30–09:10', 'python', 'Thi Python ATTT'],
   ['2027-01-07', '13:00–14:40', 'xstk', 'Thi XSTK'],
 ];
-export const whiteSlots = ['2026-11-28', '2026-12-01', '2026-12-05', '2026-12-08', '2026-12-12', '2026-12-15', '2026-12-19'];
+export const whiteSlots = [
+  '2026-11-28', '2026-12-01', '2026-12-05', '2026-12-08', '2026-12-12', '2026-12-15', '2026-12-19',
+  '2026-12-22', '2026-12-26', '2026-12-29', '2027-01-02', '2027-01-05',
+];
 export const blockId = (session: Session, index: number) => session.id + '/' + index;
 
 schedule.sort((a, b) => a.date.localeCompare(b.date));
 
 export function moveBlock(progress: ChecklistProgress, id: string, slot: string) {
   const entries = progress.blocks ??= {};
+  const session = schedule.find(s => s.blocks.some((_, index) => blockId(s, index) === id));
+  if (!session || session.time || slot < session.date || entries[id]?.omitted || entries[id]?.slot || entries[id]?.researchDate) {
+    throw new Error('Không thể dời khối này.');
+  }
+  if (session.group === 'ctdl' && session.blocks.some((_, i) => entries[blockId(session, i)]?.slot)) {
+    throw new Error('Mỗi buổi CTDLGT chỉ dời một khối.');
+  }
   if (!whiteSlots.includes(slot) || Object.values(entries).some(item => item.slot === slot && !item.omitted)) {
     throw new Error('Khung trắng không còn trống.');
   }

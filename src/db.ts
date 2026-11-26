@@ -22,6 +22,21 @@ class StudyDB extends Dexie {
 
 export const db = new StudyDB();
 
+async function removeRetiredCourse() {
+  const related = (row: { id: string; subjectId?: string }) =>
+    row.subjectId === 'nckh' || row.id === 'class-nckh-assumed' || row.id === 'exam-nckh';
+  const tasks = await db.tasks.filter(related).primaryKeys();
+  const chapters = await db.chapters.filter(related).primaryKeys();
+  const reviews = await db.reviews.filter(row => related(row) || chapters.includes(row.chapterId)).primaryKeys();
+  await db.reviewAttempts.filter(row => reviews.includes(row.reviewId) || chapters.includes(row.chapterId)).delete();
+  await db.sessions.filter(row => related(row) || (row.taskId !== undefined && tasks.includes(row.taskId))).delete();
+  await db.reviews.bulkDelete(reviews);
+  await db.tasks.bulkDelete(tasks);
+  await db.chapters.bulkDelete(chapters);
+  await db.exams.filter(related).delete();
+  await db.subjects.delete('nckh');
+}
+
 export async function ensureSeeded() {
   const settings = await db.settings.get('settings');
   if (!settings) {
@@ -31,6 +46,11 @@ export async function ensureSeeded() {
       await db.tasks.bulkPut(tasks);
       await db.exams.bulkPut(exams);
       await db.settings.put({ id: 'settings', energyMode: 'green', darkMode: false, currentView: 'overview', seededVersion: PLAN_VERSION });
+    });
+  } else if (settings.seededVersion < PLAN_VERSION) {
+    await db.transaction('rw', [db.subjects, db.chapters, db.tasks, db.exams, db.reviews, db.reviewAttempts, db.sessions, db.settings], async () => {
+      await removeRetiredCourse();
+      await db.settings.update('settings', { seededVersion: PLAN_VERSION });
     });
   }
 }
@@ -50,12 +70,14 @@ export async function importAll(data: BackupData, mode: 'replace' | 'merge') {
     if (mode === 'replace') await Promise.all([db.subjects.clear(),db.chapters.clear(),db.tasks.clear(),db.exams.clear(),db.reviews.clear(),db.reviewAttempts.clear(),db.sessions.clear(),db.settings.clear()]);
     await db.subjects.bulkPut(data.subjects); await db.chapters.bulkPut(data.chapters); await db.tasks.bulkPut(data.tasks); await db.exams.bulkPut(data.exams);
     await db.reviews.bulkPut(data.reviews); await db.reviewAttempts.bulkPut(data.reviewAttempts); await db.sessions.bulkPut(data.sessions);
+    await removeRetiredCourse();
     for (const incoming of data.settings) {
       const current = mode === 'merge' ? await db.settings.get(incoming.id) : undefined;
       const a = current?.checklist;
       const b = incoming.checklist;
       await db.settings.put({
         ...current, ...incoming,
+        seededVersion: PLAN_VERSION,
         checklist: a || b ? {
           blocks: { ...a?.blocks, ...b?.blocks },
           times: { ...a?.times, ...b?.times },

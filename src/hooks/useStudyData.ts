@@ -18,7 +18,17 @@ export function useStudyData() {
   const refresh = useCallback(async () => {
     try {
       const [subjects, chapters, tasks, exams, reviews, sessions, settings] = await Promise.all([db.subjects.toArray(), db.chapters.toArray(), db.tasks.toArray(), db.exams.toArray(), db.reviews.toArray(), db.sessions.toArray(), db.settings.get('settings')]);
-      setData({ subjects, chapters, tasks, exams, reviews, sessions, settings: settings ?? emptySettings });
+      // Old backups can still contain the retired course. Keep its records in storage.
+      const visible = (row: { subjectId?: string }) => row.subjectId !== 'nckh';
+      setData({
+        subjects: subjects.filter(subject => subject.id !== 'nckh'),
+        chapters: chapters.filter(visible),
+        tasks: tasks.filter(visible),
+        exams: exams.filter(visible),
+        reviews: reviews.filter(visible),
+        sessions: sessions.filter(visible),
+        settings: settings ?? emptySettings,
+      });
     } catch (e) { setError(e instanceof Error ? e.message : 'Không thể đọc dữ liệu cục bộ.'); }
     finally { setLoading(false); }
   }, []);

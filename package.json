@@ -21,6 +21,7 @@
     "@types/react": "latest",
     "@types/react-dom": "latest",
     "autoprefixer": "latest",
+    "fake-indexeddb": "^6.2.8",
     "postcss": "latest",
     "tailwindcss": "^3.4.17",
     "typescript": "latest",

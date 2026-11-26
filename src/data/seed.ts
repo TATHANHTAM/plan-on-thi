@@ -1,13 +1,12 @@
 import type { Chapter, Exam, FixedCommitment, StudyTask, Subject } from '../types';
 
-export const PLAN_VERSION = 1;
+export const PLAN_VERSION = 2;
 const createdAt = '2026-11-20T00:00:00+07:00';
 
 export const subjects: Subject[] = [
   { id: 'xstk', name: 'Xác suất thống kê', shortName: 'XSTK', color: '#0d9488', initialAssessment: 0, initialAssessmentLabel: 'Tự đánh giá ban đầu 0/10', note: 'Khoảng trống kiến thức lớn; ưu tiên nền tảng và đầu ra tự giải.' },
   { id: 'ctdl', name: 'CTDL & Giải thuật', shortName: 'CTDL', color: '#2563eb', initialAssessment: 5, initialAssessmentLabel: 'Tự đánh giá ban đầu 5/10', note: 'Tên thật của 7 chương chưa được tài liệu nguồn xác nhận.' },
   { id: 'python', name: 'Python cho ATTT', shortName: 'Python', color: '#7c3aed', initialAssessment: 6, initialAssessmentLabel: 'Tự đánh giá ban đầu 6/10', note: 'Tên thật của 8 chương chưa được tài liệu nguồn xác nhận.' },
-  { id: 'nckh', name: 'PP luận NCKH', shortName: 'NCKH', color: '#d97706', initialAssessment: null, note: 'Cần xác nhận tiểu luận môn học và NCKH ngoại khóa có phải hai đầu việc khác nhau.' },
   { id: 'other', name: 'Môn khác', shortName: 'Khác', color: '#64748b', initialAssessment: null },
 ];
 
@@ -19,8 +18,14 @@ export const chapters: Chapter[] = [
 ];
 
 let seq = 0;
+// Reserve IDs removed with the old course so existing backups still match.
+const retiredSequence = new Set([34, 54, 71, 89, 109]);
+function nextSequence() {
+  do { seq++; } while (retiredSequence.has(seq));
+  return seq;
+}
 const t = (date: string, subjectId: string, chapter: number | undefined, title: string, blocks: number, priority: StudyTask['priority'] = 'MUST', description = ''): StudyTask => ({
-  id: `plan-${date}-${++seq}`,
+  id: `plan-${date}-${nextSequence()}`,
   subjectId,
   chapterId: chapter ? `${subjectId}-${chapter}` : undefined,
   title,
@@ -67,7 +72,6 @@ export const tasks: StudyTask[] = [
   t('2026-12-05','ctdl',6,'Ch6: nền tảng',1),
   t('2026-12-05','ctdl',6,'Ch6: bài cơ bản',1,'SHOULD'),
   t('2026-12-06','xstk',3,'Cổng Ch3: 6–8 câu phân loại + bài tự giải',1),
-  t('2026-12-06','nckh',undefined,'Xác minh NCKH ngoại khóa và tiểu luận có phải hai đầu việc',1,'SHOULD'),
   t('2026-12-07','xstk',4,'Bảng phân phối đồng thời và phân phối lề',2),
   t('2026-12-07','ctdl',6,'Ch6: bài ứng dụng',1),
   t('2026-12-07','ctdl',6,'Ch6: bài biến thể',1,'SHOULD'),
@@ -87,7 +91,6 @@ export const tasks: StudyTask[] = [
   t('2026-12-12','xstk',5,'Trung bình, phương sai và tỷ lệ mẫu',1),
   t('2026-12-12','ctdl',undefined,'Kiểm tra trộn Ch1–7',1,'SHOULD'),
   t('2026-12-13','xstk',5,'Phân phối của thống kê mẫu; 3 bài',1),
-  t('2026-12-13','nckh',undefined,'Xây khung bản nháp NCKH nếu là cam kết thật',1,'SHOULD'),
   t('2026-12-14','xstk',5,'Tính từ bảng tần số và cổng chương',2),
   t('2026-12-14','python',5,'Ch5: bài thực hành',1),
   t('2026-12-15','xstk',6,'Khái niệm khoảng tin cậy và nhận dạng bài',1),
@@ -104,7 +107,6 @@ export const tasks: StudyTask[] = [
   t('2026-12-19','ctdl',undefined,'Bộ đề ngắn 60–80 phút và chữa phần sai',2),
   t('2026-12-19','xstk',6,'Bộ 5 bài trộn',1),
   t('2026-12-19','xstk',6,'Cổng Ch6: chọn công thức và giải',1,'SHOULD'),
-  t('2026-12-20','nckh',undefined,'Chốt bản nháp theo mốc 20/12 nếu có hạn thật',1),
   t('2026-12-20','xstk',6,'Sửa lỗi Ch6, mở đầu Ch7 H0/H1',1),
   t('2026-12-21','xstk',7,'H0/H1, miền bác bỏ, kiểm định trung bình',2),
   t('2026-12-21','python',7,'Ch7: bài thực hành',1),
@@ -122,7 +124,6 @@ export const tasks: StudyTask[] = [
   t('2026-12-26','ctdl',undefined,'Chữa 3 lỗi có khả năng mất điểm lớn',1),
   t('2026-12-26','xstk',7,'Làm lại câu sai Ch7',1,'SHOULD'),
   t('2026-12-27','xstk',7,'Cổng Ch7 + kiểm tra hỗn hợp',1),
-  t('2026-12-27','nckh',undefined,'Hoàn thiện phần NCKH nếu là hạn bắt buộc',1),
   t('2026-12-28','ctdl',undefined,'Sửa lỗi MOCK 1, luyện chương yếu',2),
   t('2026-12-28','xstk',undefined,'Mini mock Ch1–7, không tài liệu',1),
   t('2026-12-28','xstk',undefined,'Chữa mini mock',1,'SHOULD'),
@@ -142,7 +143,6 @@ export const tasks: StudyTask[] = [
   t('2027-01-04','xstk',undefined,'Chữa 3 dạng yếu nhất',1),
   t('2027-01-04','xstk',undefined,'Kiểm tra cách chọn thống kê 20–40 phút',1,'SHOULD'),
   t('2027-01-05','xstk',undefined,'Final: lỗi mock + 6 bài chọn phân phối/kiểm định',2),
-  t('2027-01-05','nckh',undefined,'Ôn/kiểm tra tiểu luận và hình thức thi/nộp',1),
   t('2027-01-05','python',undefined,'Ôn code mẫu và lỗi thường gặp',1,'SHOULD'),
   t('2027-01-06','python',undefined,'Sổ lỗi và 1 bài nhỏ không nhìn code mẫu',1),
   t('2027-01-06','xstk',undefined,'Một trang công thức + dạng bài hay nhầm',1),
@@ -156,7 +156,6 @@ export const exams: Exam[] = [
   { id:'exam-present', subjectId:'other', title:'Thi Kỹ năng thuyết trình', date:'2026-12-23', time:'14:45', kind:'exam' },
   { id:'exam-web', subjectId:'other', title:'Thi Lập trình Web', date:'2026-12-25', time:'09:30', kind:'exam', note:'Thuyết trình.' },
   { id:'exam-ctdl', subjectId:'ctdl', title:'Thi CTDL & Giải thuật', date:'2026-12-31', time:'09:30', kind:'exam', note:'Thi thực hành.' },
-  { id:'exam-nckh', subjectId:'nckh', title:'Thi PP luận NCKH', date:'2027-01-06', time:'07:30', kind:'exam', note:'Tiểu luận; cần xác nhận quy định phòng/nộp.' },
   { id:'exam-python', subjectId:'python', title:'Thi Python ATTT', date:'2027-01-07', time:'07:30', kind:'exam', note:'Thi thực hành.' },
   { id:'exam-xstk', subjectId:'xstk', title:'Thi Xác suất thống kê', date:'2027-01-07', time:'13:00', kind:'exam', note:'Thi viết.' },
   { id:'mock-ctdl-1', subjectId:'ctdl', title:'CTDL MOCK 1', date:'2026-12-26', time:'09:30', durationMinutes:100, kind:'mock' },
@@ -168,13 +167,10 @@ export const exams: Exam[] = [
 
 export const fixedCommitments: FixedCommitment[] = [
   { id:'class-python-assumed', title:'Lớp Python (giả định)', date:'2026-11-24', time:'07:00–09:30', note:'Cần xác nhận.' },
-  { id:'class-nckh-assumed', title:'Lớp NCKH (giả định)', date:'2026-11-25', time:'13:00–15:30', note:'Cần xác nhận.' },
 ];
 
 export const sourceNotes = [
   '20–22/11/2026 chỉ dành cho đồ án Python; không có nhiệm vụ ôn thi và không tính là trễ.',
   'Tên thật của 7 chương CTDL và 8 chương Python chưa được nguồn xác nhận; dữ liệu chỉ giữ số chương.',
-  'Lớp Python 24/11 và lớp NCKH 25/11 là giả định trong nguồn, cần xác nhận.',
-  'Cần xác nhận NCKH ngoại khóa và tiểu luận PP luận NCKH có phải hai đầu việc khác nhau.',
-  'Mốc NCKH 20/12 và 27/12 chỉ áp dụng nếu là hạn thật.',
+  'Lớp Python 24/11 là giả định trong nguồn, cần xác nhận.',
 ];

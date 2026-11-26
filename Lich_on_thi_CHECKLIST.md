@@ -30,7 +30,6 @@
 | 23/12 | 14:45–16:25 | Thi Kỹ năng thuyết trình |
 | 25/12 | 09:30–11:10 | Thi Lập trình Web |
 | 31/12 | 09:30–11:10 | Thi CTDLGT |
-| 06/01 | 07:30 | Đến ký tên môn Phương pháp luận NCKH, rồi về |
 | 07/01 | 07:30–09:10 | Thi Python ATTT |
 | 07/01 | 13:00–14:40 | Thi XSTK |
 
@@ -43,10 +42,10 @@
 - [ ] **21–27/12:** giảm buổi NCKH sinh viên nếu cần vì có ba ca thi. XSTK luyện Ch7 vào ngày trống. CTDLGT thi thử 26/12 lúc 09:30–11:10 rồi ghi 2–3 lỗi cần sửa.
 - [ ] **28–31/12:** sửa lỗi CTDLGT, thi thử 29/12 lúc 09:30–11:10, ôn nhẹ ngày 30/12. Sau ca thi 31/12, kết thúc nhịp ba buổi CTDLGT.
 - [ ] **01–03/01:** thi thử XSTK 01/01 lúc 13:00–14:40 và Python ATTT 02/01 lúc 07:30–09:10. Ngày 03/01 lúc 13:00, làm đề XSTK thứ hai nếu đã chữa đề đầu; nếu còn hổng, chữa theo dạng.
-- [ ] **04–07/01:** 04–05/01 sửa dạng XSTK yếu và làm lại bài Python từng sai. 06/01 đi ký tên rồi về nghỉ, có thể ôn nhẹ tối đa hai phiên 25 phút. 07/01 chừa thời gian giữa hai ca để ăn, nghỉ và di chuyển.
+- [ ] **04–07/01:** 04–05/01 sửa dạng XSTK yếu và làm lại bài Python từng sai. 06/01 nghỉ, có thể ôn nhẹ tối đa hai phiên 25 phút. 07/01 chừa thời gian giữa hai ca để ăn, nghỉ và di chuyển.
 
 ## Dữ liệu cho checklist web
 
-Mỗi buổi là một mục riêng, có **ngày, nhóm việc, đầu ra, thời lượng dự kiến, trạng thái**. Giờ bắt đầu để trống cho buổi linh hoạt và điền cho mốc cố định hoặc thi thử. Trạng thái dùng **chưa làm / đã xong / chuyển sang khung trắng / đã bỏ**. Khung trắng và thời gian nghỉ hiển thị riêng. Giữ hai nhóm riêng cho **NCKH sinh viên** và **Phương pháp luận NCKH**.
+Mỗi buổi là một mục riêng, có **ngày, nhóm việc, đầu ra, thời lượng dự kiến, trạng thái**. Giờ bắt đầu để trống cho buổi linh hoạt và điền cho mốc cố định hoặc thi thử. Trạng thái dùng **chưa làm / đã xong / chuyển sang khung trắng / đã bỏ**. Khung trắng và thời gian nghỉ hiển thị riêng.
 
 Cuối ngày ghi năng lượng, việc đã xong, một lỗi và việc mở đầu ngày mai. Chủ nhật xem lại số buổi thực hiện, đầu ra đạt được và phần cần chuyển hoặc cắt.
