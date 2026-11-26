@@ -1,3 +1,5 @@
+import type { ChecklistProgress } from './data/checklist';
+
 export type Priority = 'MUST' | 'SHOULD' | 'BONUS';
 export type TaskStatus = 'todo' | 'in-progress' | 'completed' | 'rescheduled' | 'skipped';
 export type ChapterStage = 'not-started' | 'learning' | 'first-pass' | 'practicing' | 'review-needed' | 'exam-ready';
@@ -11,6 +13,6 @@ export interface Exam { id: string; subjectId?: string; title: string; date: str
 export interface Review { id: string; chapterId: string; subjectId: string; dueDate: string; offsetDays: 1 | 3 | 7 | 14; status: 'pending' | 'completed'; createdFrom: string; completedAt?: string; response?: ReviewResponse; }
 export interface ReviewAttempt { id: string; reviewId: string; chapterId: string; response: ReviewResponse; completedAt: string; note?: string; }
 export interface StudySession { id: string; taskId?: string; subjectId?: string; startedAt: string; endedAt: string; actualMinutes: number; exercisesAttempted?: number; correctAnswers?: number; mistakes?: string; notes?: string; }
-export interface UserSettings { id: 'settings'; energyMode: EnergyMode; darkMode: boolean; currentView: string; seededVersion: number; }
+export interface UserSettings { id: 'settings'; energyMode: EnergyMode; darkMode: boolean; currentView: string; seededVersion: number; checklist?: ChecklistProgress; }
 export interface FixedCommitment { id: string; title: string; date: string; time?: string; note?: string; }
 export interface BackupData { version: number; exportedAt: string; subjects: Subject[]; chapters: Chapter[]; tasks: StudyTask[]; exams: Exam[]; reviews: Review[]; reviewAttempts: ReviewAttempt[]; sessions: StudySession[]; settings: UserSettings[]; }

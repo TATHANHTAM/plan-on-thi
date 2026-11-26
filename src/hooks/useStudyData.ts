@@ -61,6 +61,12 @@ export function useStudyData() {
     await db.transaction('rw', db.reviews, db.reviewAttempts, db.chapters, db.tasks, async () => {
       await db.reviews.update(review.id, { status:'completed', completedAt, response });
       await db.reviewAttempts.put({ id:`attempt-${crypto.randomUUID()}`, reviewId:review.id, chapterId:review.chapterId, response, completedAt });
+      if (review.subjectId === 'xstk') {
+        if (response !== 'good') {
+          await db.chapters.update(review.chapterId, { weak: true, stage: response === 'forgot' ? 'review-needed' : 'practicing' });
+        }
+        return;
+      }
       if (response === 'partial') {
         await db.chapters.update(review.chapterId, { weak:true, stage:'practicing' });
         await db.tasks.put({ id:`targeted-${review.id}`, subjectId:review.subjectId, chapterId:review.chapterId, title:'Ôn ngắn phần còn yếu', description:'Ôn có mục tiêu từ kết quả “Nhớ một phần”.', date:addDays(todayISO(),1), estimatedBlocks:0.5, priority:'SHOULD', status:'todo', isCustom:true, parentTaskId:review.id, sourceNote:'targeted-review', createdAt:completedAt });

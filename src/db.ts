@@ -49,7 +49,21 @@ export async function importAll(data: BackupData, mode: 'replace' | 'merge') {
   await db.transaction('rw', [db.subjects, db.chapters, db.tasks, db.exams, db.reviews, db.reviewAttempts, db.sessions, db.settings], async () => {
     if (mode === 'replace') await Promise.all([db.subjects.clear(),db.chapters.clear(),db.tasks.clear(),db.exams.clear(),db.reviews.clear(),db.reviewAttempts.clear(),db.sessions.clear(),db.settings.clear()]);
     await db.subjects.bulkPut(data.subjects); await db.chapters.bulkPut(data.chapters); await db.tasks.bulkPut(data.tasks); await db.exams.bulkPut(data.exams);
-    await db.reviews.bulkPut(data.reviews); await db.reviewAttempts.bulkPut(data.reviewAttempts); await db.sessions.bulkPut(data.sessions); await db.settings.bulkPut(data.settings);
+    await db.reviews.bulkPut(data.reviews); await db.reviewAttempts.bulkPut(data.reviewAttempts); await db.sessions.bulkPut(data.sessions);
+    for (const incoming of data.settings) {
+      const current = mode === 'merge' ? await db.settings.get(incoming.id) : undefined;
+      const a = current?.checklist;
+      const b = incoming.checklist;
+      await db.settings.put({
+        ...current, ...incoming,
+        checklist: a || b ? {
+          blocks: { ...a?.blocks, ...b?.blocks },
+          times: { ...a?.times, ...b?.times },
+          enabled: { ...a?.enabled, ...b?.enabled },
+          logs: { ...a?.logs, ...b?.logs },
+        } : undefined,
+      });
+    }
   });
 }
 

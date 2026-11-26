@@ -4,11 +4,11 @@
 
 ## Chức năng chính
 
-- Dashboard việc hôm nay theo MUST / SHOULD / BONUS, tải học và đếm ngược kỳ thi.
-- Lịch hôm nay / tuần này; thêm, sửa trạng thái, dời và xóa nhiệm vụ tùy chỉnh.
+- Checklist từ `Lich_on_thi_CHECKLIST.md` áp dụng 26/11/2026–07/01/2027. Mở ở Hôm nay, chọn Tuần này để chuyển tuần.
+- Tick từng khối, sửa đầu ra và ghi lỗi ngay trong buổi. Chuyển khối sang khung trắng hoặc bỏ phần còn lại để rút gọn.
 - Theo dõi tiến độ chương độc lập với mức độ thành thạo.
 - Ôn ngắt quãng +1 / +3 / +7 / +14 và lưu lịch sử phản hồi.
-- Chế độ năng lượng Green / Yellow / Red và gợi ý xử lý lịch trễ có bước xác nhận.
+- Nhật ký cuối ngày, tổng kết Chủ nhật và cảnh báo tải học.
 - Thống kê dựa trên dữ liệu thật, bộ đếm tập trung và ghi nhận phiên học.
 - Lưu IndexedDB bằng Dexie, xuất/nhập JSON và đặt lại lịch riêng.
 
@@ -46,6 +46,8 @@ Nếu đổi tên repository, hãy đổi giá trị `base` trong `vite.config.t
 Dữ liệu nằm trong IndexedDB của đúng trình duyệt/thiết bị đang dùng, không tự đồng bộ. Redeploy không xóa dữ liệu nếu storage trình duyệt còn nguyên. Hãy dùng **Cài đặt → Xuất JSON** định kỳ và giữ tệp ở nơi an toàn.
 
 Khi nhập dữ liệu, ứng dụng kiểm tra phiên bản/cấu trúc rồi yêu cầu chọn thay thế hoặc gộp theo ID. Nhiệm vụ đã hoàn thành không thể bị xóa trực tiếp để bảo vệ lịch sử.
+
+Tiến độ checklist được sao lưu cùng cài đặt trong tệp JSON. Dữ liệu lịch trước vẫn đọc được dưới mục **Tiến độ và nhiệm vụ đã lưu từ lịch trước** và trong thống kê cũ. Tiến độ lịch trước được giữ theo ID gốc vì lịch mới có cấu trúc buổi và khối khác.
 
 ## Quy tắc lượt ôn bị lỡ
 
